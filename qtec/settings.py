@@ -76,10 +76,20 @@ WSGI_APPLICATION = 'qtec.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dao21sh5km10sf',
+        'USER': 'wvpnfrtqobdoyz',
+        'PASSWORD': 'e8945ec9f0f5a45bc76036591d8e49293c50684c7ecb6bffaab9c2dd9597c510',
+        'PORT': 5432,
+        'HOST': 'ec2-34-225-103-117.compute-1.amazonaws.com'
     }
 }
 
