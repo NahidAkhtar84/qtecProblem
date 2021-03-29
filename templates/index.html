@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content%}
+<h3 class="text-center">If you want to see history detais of all customers then, click <b>Details History</b> at navbar
+</h3>
+<div class="container-fluid">
+    <div class="p-4 m-4">
+        <div class="col-lg-5 mx-auto border rounded p-4 m-4">
+            <h3 class="alert alert-info">Search Here</h3>
+            <form action="/search" method="POST">
+                {% csrf_token %}
+                <!-- Email address -->
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="searchkeyword" name="searchkeyword">
+                </div>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-info col-lg-4">Search</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% if history %}
+<div class="container">
+    <h1>Recent Search History of <span style="color:green;">{{ request.session.username }}</span></h1>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Searched Keyword</th>
+            <th scope="col">Time</th>
+            <th scope="col">Result Title</th>
+            <th scope="col">Result Link</th>
+            <th scope="col">Result Summary</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for hist in history %}
+        <tr>
+            <td>{{ hist.searchkey }}</td>
+            <td>{{ hist.searchtime }}</td>
+            <td>{{ hist.historytitle }}</td>
+            <td>{{ hist.historylink }}</td>
+            <td>{{ hist.historysummary }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% endblock %}

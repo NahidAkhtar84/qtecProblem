@@ -1,0 +1,201 @@
+{% load static %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>HistorySearch</title>
+  </head>
+  <body>
+<!--  navbar start-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">HistorySearch</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+      </ul>
+        <ul class="navbar nav my-2 my-lg-0">
+          {% if not request.session.customer_id %}
+        <li class="nav-item">
+          <a class="nav-link active" href="/allhistory">Details History</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/signup">Register</a>
+        </li>
+          {% else %}
+
+          <li class="nav-item">
+          <a class="nav-link active" href="/allhistory">Details History</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/logout">Logout</a>
+        </li>
+          {% endif %}
+        </ul>
+    </div>
+  </div>
+</nav>
+<!--navbar ends-->
+
+    {% block content%}
+    {% endblock%}
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+
+<script>
+  $('#radioContainer > input').each(function() {
+    var radioInput = $(this);
+    if(radioInput.is(':checked')) {
+        $('#radioContainer').animate({
+            scrollTop: radioInput.offset().top
+        }, 2000);
+    }
+});
+
+
+$(document).ready(function(){
+    $('input[type="radio"]').change(function () {
+
+        var username = $('input[name="username"]:checked').prop('value') || '';
+        var keywords = $('input[name="keywords"]:checked').prop('value') || '';
+        var title = $('input[name="title"]:checked').prop('value') || '';
+        var link = $('input[name="link"]:checked').prop('value') || '';
+
+        var trs = $('tr:not(:first)');
+        $(trs).hide();
+
+        if(username == 'inactive' || keywords == 'inactive'){
+          // Do nothing as any of three condition says show all
+          // And currently we all rows selected in trs
+        } else {
+          if(username != '' && username != 'inactive'){
+              var chkdName = $('input[name="username"]:checked').prop('name');
+              trs = $(trs).find("."+chkdName+':contains('+username+')').parent();
+          }
+
+          if(keywords != '' && keywords != 'inactive'){
+              var chkdName = $('input[name="keywords"]:checked').prop('name');
+              trs = $(trs).find("."+chkdName+':contains('+keywords+')').parent();
+          }
+          if(title != '' && title != 'inactive'){
+              var chkdName = $('input[name="title"]:checked').prop('name');
+              trs = $(trs).find("."+chkdName+':contains('+title+')').parent();
+          }
+          if(link != '' && link != 'inactive'){
+              var chkdName = $('input[name="link"]:checked').prop('name');
+              trs = $(trs).find("."+chkdName+':contains('+link+')').parent();
+          }
+
+        }
+        $(trs).show();
+    });
+
+    $("#reset").on('click', function(){
+      $(':radio').prop('checked', false);
+      $('tr').show();
+    });
+});
+</script>
+
+
+<script>
+  $(".searchInput").on("input", function() {
+  var from = stringToDate($("#searchFrom").val());
+  var to = stringToDate($("#searchTo").val());
+
+  var today = $('input[name="today"]:checked').prop('value') || '';
+  var preday = $('input[name="preday"]:checked').prop('value') || '';
+  var preweek = $('input[name="preweek"]:checked').prop('value') || '';
+  var premonth = $('input[name="premonth"]:checked').prop('value') || '';
+
+  preday = preday.subtract(1, 'day')
+  preweek = preweek.subtract(1, 'week')
+  premonth = premonth.subtract(1, 'month')
+
+  $(".table tr").each(function() {
+    var row = $(this);
+    var date = stringToDate(row.find("td").eq(3).text());
+
+    //show all rows by default
+    var show = true;
+
+    if(preday && preday > today)
+        show = false;
+
+    //if from date is valid and row date is less than from date, hide the row
+    if (from && date < from)
+      show = false;
+
+    //if to date is valid and row date is greater than to date, hide the row
+    if (to && date > to)
+      show = false;
+
+    if (show)
+      row.show();
+    else
+      row.hide();
+  });
+});
+
+//parse entered date. return NaN if invalid
+function stringToDate(s) {
+  var ret = NaN;
+  var parts = s.split("/");
+  date = new Date(parts[2], parts[0], parts[1]);
+  if (!isNaN(date.getTime())) {
+    ret = date;
+  }
+  return ret;
+}
+</script>
+
+
+
+
+<!-- Date Time Picker CSS -->
+    <link rel="stylesheet" href="{% static 'date-time-phone/jquery-ui.css' %}">
+    <link rel='stylesheet' href="{% static 'date-time-phone/jquery-ui-timepicker-addon.css' %}"/>
+    <!-- Date Time Picker CSS -->
+
+<!-- Date Time Picker JS -->
+    <script src="{% static 'date-time-phone/jquery-ui.js' %}"></script>
+    <script src="{% static 'date-time-phone/jquery-ui-timepicker-addon.js' %}"></script>
+
+    <script>
+        $(function () {
+           // $("#id_birth_date").datetimepicker({dateFormat: 'mm/dd/yy', controlType: 'select'}).attr("autocomplete", "off");
+            // $( "#id_birth_date" ).timepicker({ dateFormat: 'yy-mm-dd', maxDate: 0, controlType: 'select'}).attr("autocomplete", "off") ;
+            $( "#id_birth_date" ).datepicker({ dateFormat: 'm/d/yy' }).attr("autocomplete", "off");
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $("#end_date").datepicker({ dateFormat: 'mm/dd/yy' }).attr("autocomplete", "off") ;
+
+        });
+    </script>
+
+
+
+
+  </body>
+</html>

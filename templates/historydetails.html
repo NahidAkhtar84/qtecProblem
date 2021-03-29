@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load temptags %}
+
+{% block content%}
+
+{% if historydetails %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <form name="FilterForm" id="FilterForm" action="" method="">
+                <div id="radioContainer" style="
+        display: block;
+        overflow-y: auto;
+        height: 130px;
+        margin-right:60px;
+        margin-top: 60px;
+        padding: 15px;
+        border-style: solid;
+        border-color: red;
+            ">
+                    <p>Filter with users: <br></p>
+                    {% for user in users %}
+                    <input type="radio" name="username" value="{{ user.user_name }}"/> {{ user.user_name }}<br>
+                    {% endfor %}
+                </div>
+
+                <div id="radioContainer" style="
+        display: block;
+        overflow-y: auto;
+        height: 130px;
+        margin-right:60px;
+        padding: 15px;
+        border-style: solid;
+        border-color: red;">
+                    <p>Filter with Keywords: <br></p>
+                    {% for key in keywords %}
+                    <input type="radio" name="keywords" value="{{ key }}"/> {{ key }}<br>
+                    {% endfor %}
+                </div>
+
+                <div id="radioContainer" style="
+        display: block;
+        overflow-y: auto;
+        height: 130px;
+        margin-right:60px;
+        padding: 15px;
+        border-style: solid;
+        border-color: red;">
+                    <p>Filter with Titles: <br></p>
+                    {% for title in titles %}
+                    <input type="radio" name="title" value="{{ title }}"/> {{ title }}<br>
+                    {% endfor %}
+                </div>
+
+                <div id="radioContainer" style="
+        display: block;
+        overflow-y: auto;
+        height: 130px;
+        margin-right:60px;
+        padding: 15px;
+        border-style: solid;
+        border-color: red;">
+                    <p>Filter with Links: <br></p>
+                    {% for link in links %}
+                    <input type="radio" name="link" value="{{ link }}"/> {{ link }}<br>
+                    {% endfor %}
+                </div>
+
+            </form>
+
+            <br>
+            <button id="reset">Reset</button>
+            <br>
+            <br>
+            <h3>Filter with dates</h3>
+
+            <label>From Date: Format(mm/dd/YY) </label><br>
+            <input id="searchFrom" class="searchInput" type="text" placeholder="From">
+            <br>
+            <br>
+            <label>To Date: Format(mm/dd/YY)</label>
+            <input id="searchTo" class="searchInput" type="text" placeholder="To">
+
+        </div>
+        <div class="col-sm-9">
+            <h1>All Search History</h1>
+            <table class="table" id="ExampleTable">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">User Name</th>
+                    <th>Appeared</th>
+                    <th scope="col">Searched Keyword</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Result Title</th>
+                    <th scope="col">Result Link</th>
+                    <th scope="col">Result Summary</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for hist in historydetails %}
+                <tr>
+                    <td class="username">{{ hist.user }}</td>
+                    <td>{{hist.searchkey|keywords_count}} times</td>
+                    <td class="keywords">{{ hist.searchkey }}</td>
+                    <td class="date">{{ hist.searchtime|date:'m/d/Y' }}</td>
+                    <td class="time">{{ hist.searchtime|time }}</td>
+                    <td class="title">{{ hist.historytitle }}</td>
+                    <td class="link"><a href="{{ hist.historylink }}">{{ hist.historylink }}</a></td>
+                    <td class="summary">{{ hist.historysummary }}</td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

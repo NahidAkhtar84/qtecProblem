@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content%}
+
+<div class="container-fluid">
+    <div class="p-4 m-4">
+        <div class="col-lg-5 mx-auto border rounded p-4 m-4">
+            <h3 class="alert alert-info">Create an Account</h3>
+            <form action="/signup" method="POST">
+                {% csrf_token %}
+
+                <!-- Error Message show -->
+                {% if error%}
+                <div class="alert alert-danger" role="alert">
+                    {{error}}
+                </div>
+                {% endif %}
+                <!-- First Name -->
+                <div class="mb-3">
+                    <label for="username" class="form-label">User Name</label>
+                    <input value="{{exvalues.fname}}" type="text" class="form-control" id="username" name="username">
+                </div>
+
+                <!-- Phone Number -->
+                <div class="mb-3">
+                    <label for="mobilenumber" class="form-label">Phone Number</label>
+                    <input value="{{exvalues.phone}}" type="text" class="form-control" id="mobilenumber"
+                           name="mobilenumber"
+                           placeholder="Please Enter Your Current Active Phone Number">
+                </div>
+
+                <!-- Email address -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input value="{{exvalues.email}}" type="text" class="form-control" id="email" name="email">
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-info">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
