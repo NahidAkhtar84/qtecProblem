@@ -25,7 +25,7 @@ SECRET_KEY = 'fm0=c#55#r#)sr^koiy0ds!$^)5q^0xc897(52!#h%3yka0hya'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['qtecproblem.herokuapp.com']
 
 
 # Application definition
