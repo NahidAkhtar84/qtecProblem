@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from searchhistory.models import searchhistory
 from users.models import User
+from datetime import date
 
 
 class historyDetails(View):
@@ -12,6 +13,8 @@ class historyDetails(View):
         keywords = searchhistory.objects.values_list('searchkey', flat=True).distinct()
         titles = searchhistory.objects.values_list('historytitle', flat=True).distinct()
         links = searchhistory.objects.values_list('historylink', flat=True).distinct()
+        d3 = date.today()
+        today = d3.strftime("%m/%d/%y")
 
         context = {
             'historydetails': historydetails,
@@ -19,6 +22,7 @@ class historyDetails(View):
             'keywords': keywords,
             'titles': titles,
             'links': links,
+            'today': today,
         }
         template = 'historydetails.html'
         return render(request, template, context)

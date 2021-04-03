@@ -115,20 +115,51 @@ $(document).ready(function(){
 });
 </script>
 
+<script>
+  $(".prevbtn").click(function(){
+  var prevq = stringToDate($("#prev_day").val());
+  var todayq =new Date(prevq);
+  todayq.setDate(todayq.getDate() - 1);
+
+  var myCurrentDate=new Date();
+  var myPastDate=new Date(myCurrentDate);
+  myPastDate.setDate(myPastDate.getDate() - 2);
+
+  $(".table tr").each(function() {
+    var row = $(this);
+    var dat = stringToDate(row.find("td").eq(3).text());
+    var date=new Date(dat);
+    date.setDate(date.getDate() - 30);
+
+    var show = true;
+    if (date < myPastDate && date > todayq)
+      show = false;
+
+    if (show)
+      row.show();
+    else
+      row.hide();
+  });
+});
+
+//parse entered date. return NaN if invalid
+function stringToDate(s) {
+  var ret = NaN;
+  var parts = s.split("/");
+  date = new Date(parts[2], parts[0], parts[1]);
+  if (!isNaN(date.getTime())) {
+    ret = date;
+  }
+  return ret;
+}
+</script>
+
 
 <script>
   $(".searchInput").on("input", function() {
   var from = stringToDate($("#searchFrom").val());
   var to = stringToDate($("#searchTo").val());
 
-  var today = $('input[name="today"]:checked').prop('value') || '';
-  var preday = $('input[name="preday"]:checked').prop('value') || '';
-  var preweek = $('input[name="preweek"]:checked').prop('value') || '';
-  var premonth = $('input[name="premonth"]:checked').prop('value') || '';
-
-  preday = preday.subtract(1, 'day')
-  preweek = preweek.subtract(1, 'week')
-  premonth = premonth.subtract(1, 'month')
 
   $(".table tr").each(function() {
     var row = $(this);
@@ -136,9 +167,6 @@ $(document).ready(function(){
 
     //show all rows by default
     var show = true;
-
-    if(preday && preday > today)
-        show = false;
 
     //if from date is valid and row date is less than from date, hide the row
     if (from && date < from)
